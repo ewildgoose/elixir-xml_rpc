@@ -1,0 +1,3 @@
+%{"calendar": {:hex, :calendar, "0.6.7"},
+  "erlsom": {:git, "git@github.com:willemdj/erlsom.git", "5dba7819ef99ba84eeb43c946dbe7f16792e6086", []},
+  "tzdata": {:hex, :tzdata, "0.1.5"}}
