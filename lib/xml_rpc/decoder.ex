@@ -160,7 +160,7 @@ defmodule XMLRPC.Decoder do
                 {:"methodCall/params", [], params }} )
       when is_list(params)
   do
-    %XMLRPC.MethodCall{ method_name: method_name, parameters: parse_params(params) }
+    %XMLRPC.MethodCall{ method_name: method_name, params: parse_params(params) }
   end
 
   # Parse a 'fault' Response
@@ -181,7 +181,7 @@ defmodule XMLRPC.Decoder do
                 {:"methodResponse/params", [], param}} )
       when is_tuple(param)
   do
-    %XMLRPC.MethodResponse{ parameter: parse_param(param) }
+    %XMLRPC.MethodResponse{ param: parse_param(param) }
   end
 
   # ##########################################################################

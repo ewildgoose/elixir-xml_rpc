@@ -176,12 +176,12 @@ defmodule XMLRPC.DecoderTest do
 
   test "decode rpc_simple_call_1" do
     decode = XMLRPC.Decoder.decode(@rpc_simple_call_1)
-    assert decode == {:ok, %XMLRPC.MethodCall{method_name: "sample.sum", parameters: [17, 13]}}
+    assert decode == {:ok, %XMLRPC.MethodCall{method_name: "sample.sum", params: [17, 13]}}
   end
 
   test "decode rpc_simple_response_1" do
     decode = XMLRPC.Decoder.decode(@rpc_simple_response_1)
-    assert decode == {:ok, %XMLRPC.MethodResponse{parameter: 30}}
+    assert decode == {:ok, %XMLRPC.MethodResponse{param: 30}}
   end
 
   test "decode rpc_fault_1" do
@@ -203,14 +203,14 @@ defmodule XMLRPC.DecoderTest do
   test "decode rpc_response_all_array" do
     decode = XMLRPC.Decoder.decode(@rpc_response_all_array)
     assert decode == {:ok,
-                       %XMLRPC.MethodResponse{parameter: [30, true,
+                       %XMLRPC.MethodResponse{param: [30, true,
                          %XMLRPC.DateTime{raw: "19980717T14:08:55"}, -12.53, "Something here", nil]}}
   end
 
   test "decode rpc_response_all_struct" do
     decode = XMLRPC.Decoder.decode(@rpc_response_all_struct)
     assert decode == {:ok,
-                      %XMLRPC.MethodResponse{parameter: %{"bool" => true,
+                      %XMLRPC.MethodResponse{param: %{"bool" => true,
                           "datetime" => %XMLRPC.DateTime{raw: "19980717T14:08:55"},
                           "double" => -12.53, "int" => 30, "nil" => nil,
                           "string" => "Something here"}}}
