@@ -6,12 +6,12 @@ defmodule XMLRPC do
   end
 
   defmodule MethodCall do
-    @type t :: %__MODULE__{method_name: String.t, params: [ Integer|Float|String.t|map()|[Integer|Float|String.t] ]}
+    @type t :: %__MODULE__{method_name: String.t, params: [ number|boolean|String.t|map()|[number|boolean|String.t] ]}
     defstruct method_name: "", params: nil
   end
 
   defmodule MethodResponse do
-    @type t :: %__MODULE__{param: Integer|Float|String.t|map()|[Integer|Float|String.t]}
+    @type t :: %__MODULE__{param: number|boolean|String.t|map()|[number|boolean|String.t]}
     defstruct param: nil
   end
 

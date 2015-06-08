@@ -187,34 +187,34 @@ defmodule XMLRPC.Decoder do
   # ##########################################################################
 
   # Parse an 'array' atom
-  defp parse_atom( {:ValueType, [], [{:ArrayType, [], {:"ArrayType/data", [], array}}]} )
+  defp parse_value( {:ValueType, [], [{:ArrayType, [], {:"ArrayType/data", [], array}}]} )
       when is_list(array)
   do
     parse_array(array)
   end
 
   # Parse a 'struct' atom
-  defp parse_atom( {:ValueType, [], [{:StructType, [],                   struct}]} )
+  defp parse_value( {:ValueType, [], [{:StructType, [],                   struct}]} )
       when is_list(struct)
   do
     parse_struct(struct)
   end
 
   # Parse an 'integer' atom
-  defp parse_atom( {:ValueType, [], [{:"ValueType-int", [],              int}]} )
+  defp parse_value( {:ValueType, [], [{:"ValueType-int", [],              int}]} )
       when is_integer(int)
   do
       int
   end
 
   # Parse a 'float' atom
-  defp parse_atom( {:ValueType, [], [{:"ValueType-double", [],           float}]} ) do
+  defp parse_value( {:ValueType, [], [{:"ValueType-double", [],           float}]} ) do
     Float.parse(float)
     |> elem(0)
   end
 
   # Parse a 'boolean' atom
-  defp parse_atom( {:ValueType, [], [{:"ValueType-boolean", [],          boolean}]} ) do
+  defp parse_value( {:ValueType, [], [{:"ValueType-boolean", [],          boolean}]} ) do
     case boolean do
       "0" -> false
       "1" -> true
@@ -222,18 +222,18 @@ defmodule XMLRPC.Decoder do
   end
 
   # Parse a 'datetime' atom (needs decoding from bolloxed iso8601 alike format...)
-  defp parse_atom( {:ValueType, [], [{:"ValueType-dateTime.iso8601", [], datetime}]} ) do
+  defp parse_value( {:ValueType, [], [{:"ValueType-dateTime.iso8601", [], datetime}]} ) do
     %XMLRPC.DateTime{raw: datetime}
   end
 
   # Parse a 'string' atom
-  defp parse_atom( {:ValueType, [], [{:"ValueType-string", [],           string}]} ) do
+  defp parse_value( {:ValueType, [], [{:"ValueType-string", [],           string}]} ) do
     string
   end
 
   # Parse a 'nil' atom
   # Note: this is an xml-rpc extension
-  defp parse_atom( {:ValueType, [], [NilType: []]} ) do
+  defp parse_value( {:ValueType, [], [NilType: []]} ) do
     nil
   end
 
@@ -256,7 +256,7 @@ defmodule XMLRPC.Decoder do
   # Note: values can be 'structs'/'arrays' as well as other atom types
   defp parse_array(doc) when is_list(doc) do
     doc
-    |> Enum.map &parse_atom/1
+    |> Enum.map &parse_value/1
   end
 
   # ##########################################################################
@@ -268,13 +268,13 @@ defmodule XMLRPC.Decoder do
   end
 
   # Parse a single Parameter
-  defp parse_param( {:ParamType, [], value } ), do: parse_atom(value)
+  defp parse_param( {:ParamType, [], value } ), do: parse_value(value)
 
   # ##########################################################################
 
   # Parse one member of a Struct
   defp parse_member( {:MemberType, [], name, value } ) do
-    [{name, parse_atom(value)}]
+    [{name, parse_value(value)}]
   end
 
 
