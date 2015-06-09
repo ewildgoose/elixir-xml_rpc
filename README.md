@@ -34,9 +34,9 @@ XML-RPC only allows limited parameter types. We map these to Elixir as follows:
 | <boolean>          | Boolean - true/false    |
 | <string>           | Bitstring - "string"    |
 | <int> (<i4>)       | Integer - 17            |
-| <double>`          | Float - -12.3           |
-| <array>`           | List - [1, 2, 3]        |
-| <struct>`          | Map - %{key: "value"}   |
+| <double>           | Float - -12.3           |
+| <array>            | List - [1, 2, 3]        |
+| <struct>           | Map - %{key: "value"}   |
 | <dateTime.iso8601> | %XMLRPC.DateTime        |
 | <base64>           | %XMLRPC.Base64          |
 | <nil/> (optional)  | nil                     |
@@ -70,7 +70,7 @@ multiple values)
 
     %XMLRPC.MethodResponse{param: 30}
 
-To encode/decode to xml use `XMLRPC.encode/2` or 'XMLRPC.decode/2'
+To encode/decode to xml use `XMLRPC.encode/2` or `XMLRPC.decode/2`
 
 ## Examples
 
@@ -86,6 +86,7 @@ simply call `XMLRPC.encode/2`, and then decode the response with `XMLRPC.decode/
     # Now use HTTPoison to call your RPC
     response = HTTPoison.post!("http://www.advogato.org/XMLRPC", request_body).body
 
+    # eg
     response = "<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>"
                 |> XMLRPC.decode
     {:ok, %XMLRPC.MethodResponse{param: [5, 6]}}
