@@ -1,6 +1,8 @@
 defmodule XMLRPC.DecoderTest do
   use ExUnit.Case, async: true
   doctest XMLRPC
+  doctest XMLRPC.DateTime
+  doctest XMLRPC.Base64
 
   @rpc_simple_call_1 """
 <?xml version="1.0" encoding="UTF-8"?>

@@ -24,7 +24,7 @@ defmodule XMLRPC.DateTime do
   We attempt to be generous in parsing, but no attempt is made to handle timezones.
   For more accurate parsing, including handling timezones, see the Calendar library
 
-      iex>XMLRPC.DateTime.new(%XMLRPC.DateTime{raw: "20150609T09:07:02"})
+      iex>XMLRPC.DateTime.to_erlang_date(%XMLRPC.DateTime{raw: "20150609T09:07:02"})
       {:ok, {{2015, 6, 9}, {9, 7, 2}}}
   """
   def to_erlang_date(%__MODULE__{raw: date}) do
