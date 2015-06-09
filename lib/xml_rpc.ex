@@ -6,18 +6,18 @@ defmodule XMLRPC do
 
 
   @moduledoc ~S"""
-  Encode and Decode elixir terms to [XML-RPC](http://wikipedia.org/wiki/XML-RPC) format,
-  with full data-type support
+  Encode and Decode elixir terms to [XML-RPC](http://wikipedia.org/wiki/XML-RPC) parameters.
+  All XML-RPC parameter types are supported, including arrays, structs and Nil (optional).
 
   This module handles the parsing and encoding of the datatypes, but can be used
   in conjunction with HTTPoison, Phoenix, etc to create fully featured XML-RPC
   clients and servers.
 
-  We use [erlsom](https://github.com/willemdj/erlsom) to handle the xml decoding
-  as xmerl creates atoms during decoding, which has the potential that a
+  [erlsom](https://github.com/willemdj/erlsom) is used to decode the xml
+  as xmerl creates atoms during decoding, which has the risk that a
   malicious client can exhaust out atom space and crash the vm. Additionally
-  input is parsed against an [XML Schema](http://en.wikipedia.org/wiki/XML_schema),
-  which should additionally enforce correctness of input.
+  xml input (ie untrusted) is validated against an [XML Schema](http://en.wikipedia.org/wiki/XML_schema),
+  which should help enforce correctness of input.
 
   ## Example
 
@@ -95,10 +95,13 @@ defmodule XMLRPC do
     encode(value, [iodata: true] ++ options)
   end
 
-  @doc """
+  @doc ~S"""
   Encode an XMLRPC call or response elixir structure into XML.
 
   Raises an exception on error.
+
+      iex> %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode!
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"
   """
   @spec encode!(XMLRPC.t, Keyword.t) :: iodata | no_return
   def encode!(value, options \\ []) do
@@ -111,8 +114,11 @@ defmodule XMLRPC do
     end
   end
 
-  @doc """
+  @doc ~S"""
   Encode an XMLRPC call or response elixir structure into XML.
+
+      iex> %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode
+      {:ok, "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"}
   """
   @spec encode(XMLRPC.t, Keyword.t) :: {:ok, iodata} | {:ok, String.t} | {:error, {any, String.t}}
   def encode(value, options \\ []) do
@@ -124,8 +130,11 @@ defmodule XMLRPC do
   end
 
 
-  @doc """
+  @doc ~S"""
   Decode XMLRPC call or response XML into an Elixir structure
+
+      iex> XMLRPC.decode("<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>")
+      {:ok, %XMLRPC.MethodResponse{param: [5, 6]}}
   """
   @spec decode(iodata, Keyword.t) :: {:ok, Fault.t} | {:ok, MethodCall.t} | {:ok, MethodResponse.t} | {:error, String.t}
   def decode(value, options \\ []) do
@@ -136,10 +145,13 @@ defmodule XMLRPC do
       {:error, exception.message}
   end
 
-  @doc """
+  @doc ~S"""
   Decode XMLRPC call or response XML into an Elixir structure
 
   Raises an exception on error.
+
+      iex> XMLRPC.decode!("<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>")
+      %XMLRPC.MethodResponse{param: [5, 6]}
   """
   @spec decode!(iodata, Keyword.t) :: Fault.t | MethodCall.t | MethodResponse.t | no_return
   def decode!(value, options \\ []) do

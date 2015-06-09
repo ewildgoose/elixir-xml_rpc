@@ -21,6 +21,12 @@ defmodule XMLRPC.Decoder do
   @doc """
   Decode an XML-RPC Call or Response object
 
+  Input:
+  iodata consisting of the input XML string
+  options:
+    exclude_nil: false (default) - allow decoding of <nil/> values
+
+  Output:
   On any parse failure raises XMLRPC.DecodeError
 
   On success the decoded result will be a struct, either:
