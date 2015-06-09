@@ -1,7 +1,8 @@
 defmodule XMLRPC.DecoderTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+  doctest XMLRPC
 
-@rpc_simple_call_1 """
+  @rpc_simple_call_1 """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodCall>
    <methodName>sample.sum</methodName>
@@ -17,10 +18,10 @@ defmodule XMLRPC.DecoderTest do
 </methodCall>
 """
 
-@rpc_simple_call_1_elixir %XMLRPC.MethodCall{method_name: "sample.sum", params: [17, 13]}
+  @rpc_simple_call_1_elixir %XMLRPC.MethodCall{method_name: "sample.sum", params: [17, 13]}
 
 
-@rpc_simple_response_1 """
+  @rpc_simple_response_1 """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
    <params>
@@ -31,10 +32,10 @@ defmodule XMLRPC.DecoderTest do
 </methodResponse>
 """
 
-@rpc_simple_response_1_elixir %XMLRPC.MethodResponse{param: 30}
+  @rpc_simple_response_1_elixir %XMLRPC.MethodResponse{param: 30}
 
 
-@rpc_fault_1 """
+  @rpc_fault_1 """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
   <fault>
@@ -54,10 +55,10 @@ defmodule XMLRPC.DecoderTest do
 </methodResponse>
 """
 
-@rpc_fault_1_elixir            %XMLRPC.Fault{fault_code: 4, fault_string: "Too many parameters."}
+  @rpc_fault_1_elixir            %XMLRPC.Fault{fault_code: 4, fault_string: "Too many parameters."}
 
 
-@rpc_response_all_array """
+  @rpc_response_all_array """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
   <params>
@@ -78,12 +79,13 @@ defmodule XMLRPC.DecoderTest do
   </params>
 </methodResponse>
 """
-@rpc_response_all_array_elixir %XMLRPC.MethodResponse{param: [30, true,
+  @rpc_response_all_array_elixir %XMLRPC.MethodResponse{param:
+                                  [30, true,
                                     %XMLRPC.DateTime{raw: "19980717T14:08:55"},
                                     -12.53, "Something here", nil]}
 
 
-@rpc_response_all_struct """
+  @rpc_response_all_struct """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
   <params>
@@ -121,13 +123,14 @@ defmodule XMLRPC.DecoderTest do
 </methodResponse>
 """
 
-@rpc_response_all_struct_elixir %XMLRPC.MethodResponse{param: %{"bool" => true,
+  @rpc_response_all_struct_elixir %XMLRPC.MethodResponse{param:
+                                  %{"bool" => true,
                                     "datetime" => %XMLRPC.DateTime{raw: "19980717T14:08:55"},
                                     "double" => -12.53, "int" => 30, "nil" => nil,
                                     "string" => "Something here"}}
 
 
-@rpc_response_nested """
+  @rpc_response_nested """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
   <params>
@@ -165,11 +168,11 @@ defmodule XMLRPC.DecoderTest do
 </methodResponse>
 """
 
-@rpc_response_nested_elixir     %XMLRPC.MethodResponse{param: [30, nil,
-                                    %{"array" => [30]} ]}
+  @rpc_response_nested_elixir     %XMLRPC.MethodResponse{param:
+                                    [30, nil, %{"array" => [30]} ]}
 
 
-@rpc_response_invalid_1 """
+  @rpc_response_invalid_1 """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
   <params>
@@ -184,7 +187,7 @@ defmodule XMLRPC.DecoderTest do
 </methodResponse>
 """
 
-@rpc_response_invalid_2 """
+  @rpc_response_invalid_2 """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
   <params>
@@ -195,47 +198,49 @@ defmodule XMLRPC.DecoderTest do
 </methodResponse>
 """
 
+  @rpc_response_invalid_3_elixir %XMLRPC.MethodResponse{param: HashSet.new}
+
 
   # ##########################################################################
 
 
   test "decode rpc_simple_call_1" do
-    decode = XMLRPC.Decoder.decode(@rpc_simple_call_1)
+    decode = XMLRPC.decode(@rpc_simple_call_1)
     assert decode == {:ok, @rpc_simple_call_1_elixir}
   end
 
   test "decode rpc_simple_response_1" do
-    decode = XMLRPC.Decoder.decode(@rpc_simple_response_1)
-    assert decode == {:ok, @rpc_simple_response_1_elixir}
+    decode = XMLRPC.decode!(@rpc_simple_response_1)
+    assert decode == @rpc_simple_response_1_elixir
   end
 
   test "decode rpc_fault_1" do
-    decode = XMLRPC.Decoder.decode(@rpc_fault_1)
+    decode = XMLRPC.decode(@rpc_fault_1)
     assert decode == {:ok, @rpc_fault_1_elixir}
   end
 
   test "decode rpc_response_all_array" do
-    decode = XMLRPC.Decoder.decode(@rpc_response_all_array)
+    decode = XMLRPC.decode(@rpc_response_all_array)
     assert decode == {:ok, @rpc_response_all_array_elixir}
   end
 
   test "decode rpc_response_all_struct" do
-    decode = XMLRPC.Decoder.decode(@rpc_response_all_struct)
+    decode = XMLRPC.decode(@rpc_response_all_struct)
     assert decode == {:ok, @rpc_response_all_struct_elixir}
   end
 
   test "decode rpc_response_nested" do
-    decode = XMLRPC.Decoder.decode(@rpc_response_nested)
+    decode = XMLRPC.decode(@rpc_response_nested)
     assert decode == {:ok, @rpc_response_nested_elixir}
   end
 
   test "decode rpc_response_invalid_1" do
-    decode = XMLRPC.Decoder.decode(@rpc_response_invalid_1)
+    decode = XMLRPC.decode(@rpc_response_invalid_1)
     assert decode == {:error, "1 - Unexpected event, expected end-tag"}
   end
 
   test "decode rpc_response_invalid_2" do
-    decode = XMLRPC.Decoder.decode(@rpc_response_invalid_2)
+    decode = XMLRPC.decode(@rpc_response_invalid_2)
     assert decode == {:error, "Malformed: Tags don\'t match"}
   end
 
@@ -243,51 +248,58 @@ defmodule XMLRPC.DecoderTest do
 
 
   test "encode rpc_simple_call_1" do
-    encode = XMLRPC.Encoder.encode(@rpc_simple_call_1_elixir)
+    encode = XMLRPC.encode!(@rpc_simple_call_1_elixir)
              |> IO.iodata_to_binary
 
     assert encode == strip_space(@rpc_simple_call_1)
   end
 
   test "encode rpc_simple_response_1" do
-    encode = XMLRPC.Encoder.encode(@rpc_simple_response_1_elixir)
+    encode = XMLRPC.encode!(@rpc_simple_response_1_elixir)
              |> IO.iodata_to_binary
 
     assert encode == strip_space(@rpc_simple_response_1)
   end
 
   test "encode rpc_fault_1" do
-    encode = XMLRPC.Encoder.encode(@rpc_fault_1_elixir)
+    encode = XMLRPC.encode!(@rpc_fault_1_elixir)
              |> IO.iodata_to_binary
 
     assert encode == strip_space(@rpc_fault_1)
   end
 
   test "encode rpc_response_all_array" do
-    encode = XMLRPC.Encoder.encode(@rpc_response_all_array_elixir)
+    encode = XMLRPC.encode!(@rpc_response_all_array_elixir)
              |> IO.iodata_to_binary
 
     assert encode == strip_space(@rpc_response_all_array)
   end
 
   test "encode rpc_response_all_struct" do
-    encode = XMLRPC.Encoder.encode(@rpc_response_all_struct_elixir)
+    encode = XMLRPC.encode!(@rpc_response_all_struct_elixir)
              |> IO.iodata_to_binary
 
     assert encode == strip_space(@rpc_response_all_struct)
   end
 
-  test "encode rpc_response_invalid_2" do
-    encode = XMLRPC.Encoder.encode(@rpc_response_nested_elixir)
-             |> IO.iodata_to_binary
+  test "encode rpc_response_nested" do
+    encode = XMLRPC.encode!(@rpc_response_nested_elixir)
 
     assert encode == strip_space(@rpc_response_nested)
+  end
+
+  test "encode rpc_response_invalid_3" do
+    assert_raise XMLRPC.EncodeError, fn ->
+      XMLRPC.encode!(@rpc_response_invalid_3_elixir)
+    end
   end
 
   # ##########################################################################
 
 
-  def strip_space(string) do
+  # Helper functions
+  #
+  defp strip_space(string) do
     Regex.replace(~r/>\s+</, string, "><")
     |> String.strip
   end

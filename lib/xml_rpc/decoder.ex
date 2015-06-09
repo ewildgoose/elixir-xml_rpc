@@ -1,4 +1,13 @@
+defmodule XMLRPC.DecodeError do
+  defexception message: nil
+end
+
 defmodule XMLRPC.Decoder do
+
+  alias XMLRPC.DecodeError
+  alias XMLRPC.Fault
+  alias XMLRPC.MethodCall
+  alias XMLRPC.MethodResponse
 
   @xmlrpc_xsd """
 <?xml version="1.0"?>
@@ -125,28 +134,33 @@ defmodule XMLRPC.Decoder do
 
 </xsd:schema>
 """
-
+  @moduledoc """
+  This module does the work of decoding an XML-RPC call or response.
+  """
 
   @doc """
   Decode an XML-RPC Call or Response object
 
-  It returns `{:ok, decoded}` on success
-  {:error, reason} on any parse failure
+  On any parse failure raises XMLRPC.DecodeError
 
-  The decoded result will be either a XMLRPC.MethodCall, XMLRPC.MethodResponse
-  or XMLRPC.Fault struct.
+  On success the decoded result will be a struct, either:
+  * XMLRPC.MethodCall
+  * XMLRPC.MethodResponse
+  * XMLRPC.Fault
   """
-  def decode(xml) do
+  def decode!(iodata, _options) do
     {:ok, model} = :erlsom.compile_xsd(@xmlrpc_xsd)
+    xml = IO.iodata_to_binary(iodata)
 
     case :erlsom.scan(xml, model, [{:output_encoding, :utf8}]) do
       {:error, [{:exception, {_error_type, {error}}}, _stack, _received]} when is_list(error) ->
-                              {:error, List.to_string(error)}
+          raise DecodeError, message: List.to_string(error)
       {:error, [{:exception, {_error_type, error}}, _stack, _received]} ->
-                              {:error, error}
+          raise DecodeError, message: error
       {:error, message} when is_list(message) ->
-                              {:error, List.to_string(message)}
-      {:ok, struct, _rest} -> {:ok, parse(struct)}
+          raise DecodeError, message: List.to_string(message)
+      {:ok, struct, _rest} ->
+          parse(struct)
     end
 
   end
@@ -160,7 +174,7 @@ defmodule XMLRPC.Decoder do
                 {:"methodCall/params", [], params }} )
       when is_list(params)
   do
-    %XMLRPC.MethodCall{ method_name: method_name, params: parse_params(params) }
+    %MethodCall{ method_name: method_name, params: parse_params(params) }
   end
 
   # Parse a 'fault' Response
@@ -173,7 +187,7 @@ defmodule XMLRPC.Decoder do
     fault = parse_struct(fault_struct)
     fault_code = Dict.get(fault, "faultCode")
     fault_string = Dict.get(fault, "faultString")
-    %XMLRPC.Fault{ fault_code: fault_code, fault_string: fault_string }
+    %Fault{ fault_code: fault_code, fault_string: fault_string }
   end
 
   # Parse any other 'Response'
@@ -181,7 +195,7 @@ defmodule XMLRPC.Decoder do
                 {:"methodResponse/params", [], param}} )
       when is_tuple(param)
   do
-    %XMLRPC.MethodResponse{ param: parse_param(param) }
+    %MethodResponse{ param: parse_param(param) }
   end
 
   # ##########################################################################
@@ -277,18 +291,5 @@ defmodule XMLRPC.Decoder do
     [{name, parse_value(value)}]
   end
 
-
-
-
-
-  def escape_string(string) do
-    string
-    |> String.replace("&", "&amp;")
-    |> String.replace("<", "&lt;")
-    |> String.replace(">", "&gt;")
-    |> String.replace("\"", "&quot;")
-    |> String.replace("'", "&apos;")
-    |> String.replace("\x0d", "&#xd;")
-  end
 
 end
