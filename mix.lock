@@ -1,3 +1,9 @@
 %{"calendar": {:hex, :calendar, "0.6.7"},
+  "earmark": {:hex, :earmark, "0.1.17"},
   "erlsom": {:git, "git@github.com:willemdj/erlsom.git", "5dba7819ef99ba84eeb43c946dbe7f16792e6086", []},
+  "ex_doc": {:hex, :ex_doc, "0.7.3"},
+  "hackney": {:hex, :hackney, "1.1.0"},
+  "httpoison": {:hex, :httpoison, "0.7.0"},
+  "idna": {:hex, :idna, "1.0.2"},
+  "ssl_verify_hostname": {:hex, :ssl_verify_hostname, "1.0.5"},
   "tzdata": {:hex, :tzdata, "0.1.5"}}
