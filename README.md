@@ -47,7 +47,7 @@ Common practice seems to be to use a struct (or sometimes an array) as the top
 level to pass (named) each way.
 
 The XML encoding is performed through a protocol and so abstract datatypes
-can be encoded by implementing the XMLRPC.ValueEncoder protocol.
+can be encoded by implementing the `XMLRPC.ValueEncoder` protocol.
 
 ### Nil
 Nil is not defined in the core specification, but is commonly implemented as

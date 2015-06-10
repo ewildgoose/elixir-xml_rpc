@@ -1,4 +1,13 @@
 defmodule XMLRPC.DateTime do
+  @moduledoc """
+  Struct to store a date-time in xml-rpc format (a variation on iso8601)
+
+  Note, there is significant ambiguity in the formatting of date-time in xml-rpc.
+  This is a thin wrapper around a basic parser, but knowledge of the API you are
+  trying to connect to will be valuable.  Consider writing your own decoder
+  (and perhaps encoder) to speak to non standard end-points...
+  """
+
   @type t :: %__MODULE__{raw: String.t}
   defstruct raw: ""
 
@@ -19,7 +28,7 @@ defmodule XMLRPC.DateTime do
   Attempt to parse a returned date. Note there is significant ambiguity around
   what constitutes an valid date... The spec says no hyphens between date parts
   and no timezone. However, servers in the field sometimes seem to return
-  IOS8601 dates...
+  iso8601 dates...
 
   We attempt to be generous in parsing, but no attempt is made to handle timezones.
   For more accurate parsing, including handling timezones, see the Calendar library

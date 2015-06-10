@@ -1,4 +1,10 @@
+.DS_Store
+/ebin
+/deps
+/doc
 /_build
 /deps
 erl_crash.dump
 *.ez
+/bench/snapshots
+/bench/graphs

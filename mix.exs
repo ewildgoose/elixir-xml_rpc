@@ -3,7 +3,7 @@ defmodule XmlRpc.Mixfile do
 
   def project do
     [app: :xmlrpc,
-     version: "0.1.0",
+     version: "0.1.2",
      elixir: "~> 1.0",
      name: "XMLRPC",
      description: "XML-RPC encoder/decder for Elixir. Supports all valid datatypes. Input (ie untrusted) is parsed with erlsom against an xml-schema for security.",
@@ -33,7 +33,7 @@ defmodule XmlRpc.Mixfile do
   defp deps do
     [   {:earmark, "~> 0.1", only: :docs},
         {:ex_doc, "~> 0.7", only: :docs},
-        {:erlsom, git: "git@github.com:willemdj/erlsom.git"},
+        {:erlsom, github: "willemdj/erlsom"},
     ]
   end
 
