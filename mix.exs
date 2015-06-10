@@ -3,7 +3,7 @@ defmodule XmlRpc.Mixfile do
 
   def project do
     [app: :xmlrpc,
-     version: "0.1.2",
+     version: "0.1.3",
      elixir: "~> 1.0",
      name: "XMLRPC",
      description: "XML-RPC encoder/decder for Elixir. Supports all valid datatypes. Input (ie untrusted) is parsed with erlsom against an xml-schema for security.",

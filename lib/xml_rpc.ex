@@ -34,17 +34,17 @@ defmodule XMLRPC do
 
   XML-RPC only allows limited parameter types. We map these to Elixir as follows:
 
-  | XMLRPC               | Elixir                  |
-  | ---------------------|-------------------------|
-  | `<boolean>`          | Boolean - true/false    |
-  | `<string>`           | Bitstring - "string"    |
-  | `<int>` (`<i4>`)     | Integer - 17            |
-  | `<double>`           | Float - -12.3           |
-  | `<array>`            | List - [1, 2, 3]        |
-  | `<struct>`           | Map - %{key: "value"}   |
-  | `<dateTime.iso8601>` | %XMLRPC.DateTime        |
-  | `<base64>`           | %XMLRPC.Base64          |
-  | `<nil/>` (optional)  | nil                     |
+  | XMLRPC               | Elixir                    |
+  | ---------------------|---------------------------|
+  | `<boolean>`          | Boolean, eg true/false    |
+  | `<string>`           | Bitstring, eg "string"    |
+  | `<int>` (`<i4>`)     | Integer, eg 17            |
+  | `<double>`           | Float, eg -12.3           |
+  | `<array>`            | List, eg [1, 2, 3]        |
+  | `<struct>`           | Map, eg %{key: "value"}   |
+  | `<dateTime.iso8601>` | %XMLRPC.DateTime          |
+  | `<base64>`           | %XMLRPC.Base64            |
+  | `<nil/>` (optional)  | nil                       |
 
   Note that array and struct parameters can be composed of the fundamental types,
   and you can nest to arbitrary depths. (int inside a struct, inside an array, inside a struct, etc).
