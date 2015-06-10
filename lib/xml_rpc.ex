@@ -87,21 +87,27 @@ defmodule XMLRPC do
   """
 
   defmodule Fault do
-    @moduledoc "struct defining an xml-rpc 'fault' response"
+    @moduledoc """
+    struct defining an xml-rpc 'fault' response
+    """
     @type t :: %__MODULE__{fault_code: Integer, fault_string: String.t}
 
     defstruct fault_code: 0, fault_string: ""
   end
 
   defmodule MethodCall do
-    @moduledoc "struct defining an xml-rpc call (note array of params)"
+    @moduledoc """
+    struct defining an xml-rpc call (note array of params)
+    """
     @type t :: %__MODULE__{method_name: String.t, params: [ XMLRPC.t ]}
 
     defstruct method_name: "", params: nil
   end
 
   defmodule MethodResponse do
-    @moduledoc "struct defining an xml-rpc response (note single param)"
+    @moduledoc """
+    struct defining an xml-rpc response (note single param)
+    """
     @type t :: %__MODULE__{param: XMLRPC.t}
 
     defstruct param: nil
