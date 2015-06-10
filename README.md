@@ -16,10 +16,11 @@ the risk that a malicious client can exhaust out atom space and crash the vm.
 
 ## Installation
 
-Add XML-RPC to your mix dependencies
+Add XML-RPC (and erlsom) to your mix dependencies
 
     def deps do
-      [{:xmlrpc, "~> 0.1"}]
+      [{:erlsom, github: "willemdj/erlsom"},
+       {:xmlrpc, "~> 0.1"}]
     end
 
 Then run `mix deps.get` and `mix deps.compile`.
