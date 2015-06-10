@@ -2,7 +2,7 @@ defmodule XmlRpc.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :xml_rpc,
+    [app: :xmlrpc,
      version: "0.1.0",
      elixir: "~> 1.0",
      name: "XMLRPC",
