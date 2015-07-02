@@ -174,6 +174,24 @@ defmodule XMLRPC.DecoderTest do
                                     [30, nil, %{"array" => [30]} ]}
 
 
+  @rpc_response_empty_array """
+<?xml version="1.0" encoding="UTF-8"?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <array>
+          <data></data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodResponse>
+"""
+
+  @rpc_response_empty_array_elixir %XMLRPC.MethodResponse{param: []}
+
+
   @rpc_response_invalid_1 """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
@@ -236,6 +254,11 @@ defmodule XMLRPC.DecoderTest do
     assert decode == {:ok, @rpc_response_nested_elixir}
   end
 
+  test "decode rpc_response_empty_array" do
+    decode = XMLRPC.decode(@rpc_response_empty_array)
+    assert decode == {:ok, @rpc_response_empty_array_elixir}
+  end
+
   test "decode rpc_response_invalid_1" do
     decode = XMLRPC.decode(@rpc_response_invalid_1)
     assert decode == {:error, "1 - Unexpected event, expected end-tag"}
@@ -288,6 +311,12 @@ defmodule XMLRPC.DecoderTest do
     encode = XMLRPC.encode!(@rpc_response_nested_elixir)
 
     assert encode == strip_space(@rpc_response_nested)
+  end
+
+  test "encode rpc_response_empty_array" do
+    encode = XMLRPC.encode!(@rpc_response_empty_array_elixir)
+
+    assert encode == strip_space(@rpc_response_empty_array)
   end
 
   test "encode rpc_response_invalid_3" do

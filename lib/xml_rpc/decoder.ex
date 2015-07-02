@@ -90,9 +90,7 @@ defmodule XMLRPC.Decoder do
   # ##########################################################################
 
   # Parse an 'array' atom
-  defp parse_value( {:ValueType, [], [{:ArrayType, [], {:"ArrayType/data", [], array}}]}, options )
-      when is_list(array)
-  do
+  defp parse_value( {:ValueType, [], [{:ArrayType, [], {:"ArrayType/data", [], array}}]}, options ) do
     parse_array(array, options)
   end
 
@@ -165,6 +163,9 @@ defmodule XMLRPC.Decoder do
     doc
     |> Enum.map fn v -> parse_value(v, options) end
   end
+
+  # Empty array, ie <array><data/></data>
+  defp parse_array(:undefined, options), do: []
 
   # ##########################################################################
 
