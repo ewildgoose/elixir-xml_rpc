@@ -132,6 +132,11 @@ defmodule XMLRPC.Decoder do
     string
   end
 
+  # A string value can optionally drop the type specifier. The node is assumed to be a string value
+  defp parse_value( {:ValueType, [], [string]                                     }, _options) when is_binary(string) do
+    string
+  end
+
   # Parse a 'nil' atom
   # Note: this is an xml-rpc extension
   defp parse_value( {:ValueType, [], [NilType: []]}, options) do
@@ -165,7 +170,7 @@ defmodule XMLRPC.Decoder do
   end
 
   # Empty array, ie <array><data/></data>
-  defp parse_array(:undefined, options), do: []
+  defp parse_array(:undefined, _options), do: []
 
   # ##########################################################################
 

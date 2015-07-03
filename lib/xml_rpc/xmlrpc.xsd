@@ -64,17 +64,17 @@
   </xsd:complexType>
 
   <xsd:complexType name="ValueType" mixed="true">
-    <xsd:choice>
-      <xsd:element name="i4"            type="xsd:int" />
-      <xsd:element name="int"           type="xsd:int" />
-      <xsd:element name="string"        type="ASCIIString" />
-      <xsd:element name="double"        type="xsd:decimal" />
-      <xsd:element name="Base64"        type="xsd:base64Binary" />
-      <xsd:element name="boolean"       type="NumericBoolean" />
-      <xsd:element name="dateTime.iso8601" type="xsd:dateTime" />
-      <xsd:element name="array"         type="ArrayType" />
-      <xsd:element name="struct"        type="StructType" />
-      <xsd:element name="nil"           type="NilType" />
+    <xsd:choice minOccurs="0" maxOccurs="1">
+      <xsd:element name="i4"                type="xsd:int" />
+      <xsd:element name="int"               type="xsd:int" />
+      <xsd:element name="string"            type="ASCIIString" />
+      <xsd:element name="double"            type="xsd:decimal" />
+      <xsd:element name="Base64"            type="xsd:base64Binary" />
+      <xsd:element name="boolean"           type="NumericBoolean" />
+      <xsd:element name="dateTime.iso8601"  type="xsd:dateTime" />
+      <xsd:element name="array"             type="ArrayType" />
+      <xsd:element name="struct"            type="StructType" />
+      <xsd:element name="nil"               type="NilType" />
     </xsd:choice>
   </xsd:complexType>
 
