@@ -106,7 +106,7 @@ higher level APIs
     end
 
     iex> request = %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]}
-    iex> response = HTTPoison.post!("http://www.advogato.org/XMLRPC", request_body).body
+    iex> response = HTTPoison.post!("http://www.advogato.org/XMLRPC", request).body
     {:ok, %XMLRPC.MethodResponse{param: [5, 6]}}
 
 HTTPoison allows you to hook into other parts of the request process and handle
