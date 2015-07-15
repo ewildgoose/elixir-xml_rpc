@@ -1,5 +1,6 @@
 XmlRpc
 ======
+[![Build Status](https://travis-ci.org/ewildgoose/elixir-xml_rpc.svg?branch=master)](https://travis-ci.org/ewildgoose/elixir-xml_rpc)
 
 Encode and decode elixir terms to [XML-RPC](http://wikipedia.org/wiki/XML-RPC) parameters.
 All XML-RPC parameter types are supported, including arrays, structs and Nil (optional).
