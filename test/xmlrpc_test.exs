@@ -22,6 +22,17 @@ defmodule XMLRPC.DecoderTest do
 
   @rpc_simple_call_1_elixir %XMLRPC.MethodCall{method_name: "sample.sum", params: [17, 13]}
 
+	@rpc_simple_call_2 """
+<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+   <methodName>sample.sum</methodName>
+   <params>
+   </params>
+</methodCall>
+"""
+
+  @rpc_simple_call_2_elixir %XMLRPC.MethodCall{method_name: "sample.sum", params: []}
+
 
   @rpc_simple_response_1 """
 <?xml version="1.0" encoding="UTF-8"?>
@@ -241,6 +252,11 @@ defmodule XMLRPC.DecoderTest do
   test "decode rpc_simple_call_1" do
     decode = XMLRPC.decode(@rpc_simple_call_1)
     assert decode == {:ok, @rpc_simple_call_1_elixir}
+  end
+
+  test "decode rpc_simple_call_2" do
+    decode = XMLRPC.decode(@rpc_simple_call_2)
+    assert decode == {:ok, @rpc_simple_call_2_elixir}
   end
 
   test "decode rpc_simple_response_1" do
