@@ -64,6 +64,14 @@ defmodule XMLRPC.Decoder do
     %MethodCall{ method_name: method_name, params: parse_params(params, options) }
   end
 
+  # Parse a method 'Call' with no (:undefined) params
+  defp parse(  {:methodCall, [], method_name,
+                {:"methodCall/params", [], :undefined }},
+               options )
+  do
+    %MethodCall{ method_name: method_name, params: parse_params([], options) }
+  end
+
   # Parse a 'fault' Response
   defp parse(  {:methodResponse, [],
                 {:"methodResponse/fault", [],
