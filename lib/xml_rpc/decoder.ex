@@ -108,6 +108,20 @@ defmodule XMLRPC.Decoder do
       int
   end
 
+  # Parse an 'i4' atom (32 bit integer)
+  defp parse_value( {:ValueType, [], [{:"ValueType-i4", [],              int}]}, _options)
+      when is_integer(int)
+  do
+      int
+  end
+
+  # Parse an 'i8' atom (64 bit integer)
+  defp parse_value( {:ValueType, [], [{:"ValueType-i8", [],              int}]}, _options)
+      when is_integer(int)
+  do
+      int
+  end
+
   # Parse a 'float' atom
   defp parse_value( {:ValueType, [], [{:"ValueType-double", [],           float}]}, _options) do
     Float.parse(float)
