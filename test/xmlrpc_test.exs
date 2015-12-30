@@ -43,11 +43,14 @@ defmodule XMLRPC.DecoderTest do
 <methodResponse>
    <params>
       <param>
-         <value><i4>17</i4></value>
-      </param>
-
-      <param>
-         <value><i8>1125899906842624</i8></value>
+        <value>
+          <array>
+            <data>
+              <value><i4>17</i4></value>
+              <value><i8>1125899906842624</i8></value>
+            </data>
+           </array>
+         </value>
       </param>
    </params>
 </methodResponse>
