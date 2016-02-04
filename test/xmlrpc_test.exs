@@ -309,9 +309,9 @@ defmodule XMLRPC.DecoderTest do
     assert decode == {:ok, @rpc_response_empty_string_tag_elixir}
   end
 
-  test "decode rpc_response_empty_string_tag" do
-    decode = XMLRPC.decode(@rpc_response_empty_string_tag)
-    assert decode == {:ok, @rpc_response_empty_string_tag_elixir}
+  test "decode rpc_response_optional_empty_string_tag" do
+    decode = XMLRPC.decode(@rpc_response_optional_empty_string_tag)
+    assert decode == {:ok, @rpc_response_optional_empty_string_tag_elixir}
   end
 
   test "decode rpc_response_invalid_1" do
