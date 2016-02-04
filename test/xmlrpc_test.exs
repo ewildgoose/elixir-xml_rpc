@@ -205,6 +205,32 @@ defmodule XMLRPC.DecoderTest do
 
   @rpc_response_optional_string_tag_elixir %XMLRPC.MethodResponse{param: "a4sdfff7dad8"}
 
+  @rpc_response_empty_string_tag """
+<?xml version="1.0" encoding="UTF-8"?>
+<methodResponse>
+  <params>
+    <param>
+      <value><string></string></value>
+    </param>
+  </params>
+</methodResponse>
+"""
+
+  @rpc_response_empty_string_tag_elixir %XMLRPC.MethodResponse{param: ""}
+
+  @rpc_response_optional_empty_string_tag """
+<?xml version="1.0" encoding="UTF-8"?>
+<methodResponse>
+  <params>
+    <param>
+      <value></value>
+    </param>
+  </params>
+</methodResponse>
+"""
+
+  @rpc_response_optional_empty_string_tag_elixir %XMLRPC.MethodResponse{param: ""}
+
 
   @rpc_response_invalid_1 """
 <?xml version="1.0" encoding="UTF-8"?>
@@ -276,6 +302,16 @@ defmodule XMLRPC.DecoderTest do
   test "decode rpc_response_optional_string_tag" do
     decode = XMLRPC.decode(@rpc_response_optional_string_tag)
     assert decode == {:ok, @rpc_response_optional_string_tag_elixir}
+  end
+
+  test "decode rpc_response_empty_string_tag" do
+    decode = XMLRPC.decode(@rpc_response_empty_string_tag)
+    assert decode == {:ok, @rpc_response_empty_string_tag_elixir}
+  end
+
+  test "decode rpc_response_empty_string_tag" do
+    decode = XMLRPC.decode(@rpc_response_empty_string_tag)
+    assert decode == {:ok, @rpc_response_empty_string_tag_elixir}
   end
 
   test "decode rpc_response_invalid_1" do
