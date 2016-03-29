@@ -237,6 +237,11 @@ defmodule XMLRPC.DecoderTest do
 
   # ##########################################################################
 
+  test "xmlrpc base64 encode/decode" do
+    request = %XMLRPC.MethodCall{method_name: "create_user", params: [%XMLRPC.Base64{raw: "dsdsdsdsd"}]}
+    xml = request |> XMLRPC.encode!
+    assert %XMLRPC.MethodCall{method_name: "create_user", params: ["dsdsdsdsd"]} == xml |> XMLRPC.decode!
+  end
 
   test "decode rpc_simple_call_1" do
     decode = XMLRPC.decode(@rpc_simple_call_1)
