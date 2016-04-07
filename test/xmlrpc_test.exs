@@ -221,6 +221,26 @@ defmodule XMLRPC.DecoderTest do
 </methodCall>
 """
 
+  @rpc_base64_call_2 """
+<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+   <methodName>sample.fun1</methodName>
+   <params>
+      <param>
+         <value><boolean>1</boolean></value>
+      </param>
+      <param>
+         <value><base64>
+YWFiYmNjZGRlZWZmYWFiYmNjZGRlZWZm
+MDAxMTIyMzM0NDU1NjY3Nzg4OTkwMDEx
+MjIzMzQ0NTU2Njc3ODg5OQ==
+         </base64></value>
+      </param>
+   </params>
+</methodCall>
+"""
+
+
   @rpc_base64_call_1_elixir_to_encode %XMLRPC.MethodCall{method_name: "sample.fun1", params: [true,
                                                                                               XMLRPC.Base64.new("aabbccddeeffaabbccddeeff0011223344556677889900112233445566778899")]}
   @rpc_base64_call_1_elixir_decoded %XMLRPC.MethodCall{method_name: "sample.fun1", params: [true,
@@ -309,6 +329,11 @@ defmodule XMLRPC.DecoderTest do
 
   test "decode base64 data" do
     decode = XMLRPC.decode(@rpc_base64_call_1)
+    assert decode == {:ok, @rpc_base64_call_1_elixir_decoded}
+  end
+
+	test "decode base64 data with whitespace" do
+    decode = XMLRPC.decode(@rpc_base64_call_2)
     assert decode == {:ok, @rpc_base64_call_1_elixir_decoded}
   end
 
