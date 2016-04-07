@@ -20,6 +20,6 @@ defmodule XMLRPC.Base64 do
   Note: thin wrapper around `Base.decode64/1`
   """
   def to_binary(%__MODULE__{raw: encoded}) do
-    {:ok, Base.decode64(encoded)}
+    Base.decode64(encoded)
   end
 end
