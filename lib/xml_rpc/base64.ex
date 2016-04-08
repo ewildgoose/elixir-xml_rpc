@@ -20,6 +20,17 @@ defmodule XMLRPC.Base64 do
   Note: thin wrapper around `Base.decode64/1`
   """
   def to_binary(%__MODULE__{raw: encoded}) do
-    {:ok, Base.decode64(encoded)}
+    # Some XMLRPC libraries put whitespace
+    #  in the Base64 data. The <1.2.0 version
+    #  of elixir won't correctly parse it.
+    # We manually remove whitespace on older versions
+    #  of elixir
+    if Version.compare(System.version, "1.2.3") == :lt do
+      encoded
+      |> String.replace(~r/\s/, "") # remove any whitespace
+      |> Base.decode64
+    else
+      Base.decode64(encoded, ignore: :whitespace)
+    end
   end
 end
