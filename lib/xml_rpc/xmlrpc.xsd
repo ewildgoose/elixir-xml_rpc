@@ -69,7 +69,7 @@
       <xsd:element name="int"               type="xsd:int" />
       <xsd:element name="string"            type="ASCIIString" />
       <xsd:element name="double"            type="xsd:decimal" />
-      <xsd:element name="Base64"            type="xsd:base64Binary" />
+      <xsd:element name="base64"            type="xsd:base64Binary" />
       <xsd:element name="boolean"           type="NumericBoolean" />
       <xsd:element name="dateTime.iso8601"  type="xsd:dateTime" />
       <xsd:element name="array"             type="ArrayType" />

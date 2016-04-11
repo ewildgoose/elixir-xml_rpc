@@ -127,6 +127,12 @@ defmodule XMLRPC.Decoder do
     %XMLRPC.DateTime{raw: datetime}
   end
 
+  # Parse a 'base64' atom
+  defp parse_value( {:ValueType, [], [{:"ValueType-base64", [],           string}]}, _options) do
+    {:ok, decoded} = %XMLRPC.Base64{raw: string} |> XMLRPC.Base64.to_binary
+    decoded
+  end
+
   # Parse a 'string' atom
   defp parse_value( {:ValueType, [], [{:"ValueType-string", [],           string}]}, _options) do
     string
