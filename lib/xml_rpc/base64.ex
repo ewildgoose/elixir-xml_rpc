@@ -25,12 +25,16 @@ defmodule XMLRPC.Base64 do
     #  of elixir won't correctly parse it.
     # We manually remove whitespace on older versions
     #  of elixir
-    if Version.compare(System.version, "1.2.3") == :lt do
-      encoded
-      |> String.replace(~r/\s/, "") # remove any whitespace
-      |> Base.decode64
-    else
-      Base.decode64(encoded, ignore: :whitespace)
+    case encoded do
+      [] -> {:ok, encoded}
+      _ ->
+        if Version.compare(System.version, "1.2.3") == :lt do
+          encoded
+          |> String.replace(~r/\s/, "") # remove any whitespace
+          |> Base.decode64
+        else
+          Base.decode64(encoded, ignore: :whitespace)
+        end
     end
   end
 end
