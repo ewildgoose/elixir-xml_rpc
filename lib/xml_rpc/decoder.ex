@@ -149,11 +149,6 @@ defmodule XMLRPC.Decoder do
     %XMLRPC.DateTime{raw: datetime}
   end
 
-  # Parse an empty 'string' atom
-  defp parse_value( {:ValueType, [], [{:"ValueType-string", [],           []}]}, _options) do
-    ""
-  end
-
   # Parse a 'string' atom
   defp parse_value( {:ValueType, [], [{:"ValueType-string", [],           string}]}, _options) do
     string
@@ -162,11 +157,6 @@ defmodule XMLRPC.Decoder do
   # A string value can optionally drop the type specifier. The node is assumed to be a string value
   defp parse_value( {:ValueType, [], [string]                                     }, _options) when is_binary(string) do
     string
-  end
-
-  # An empty string that drops the type specifier will parse as :undefined instead of an empty binary.
-  defp parse_value( {:ValueType, [], :undefined                                   }, _options) do
-    ""  
   end
 
   # Parse a 'nil' atom
