@@ -149,6 +149,11 @@ defmodule XMLRPC.Decoder do
     %XMLRPC.DateTime{raw: datetime}
   end
 
+  # Parse a 'base64' atom
+  defp parse_value( {:ValueType, [], [{:"ValueType-base64", [],           string}]}, _options) do
+    %XMLRPC.Base64{raw: string}
+  end
+
   # Parse an empty 'string' atom
   defp parse_value( {:ValueType, [], [{:"ValueType-string", [],           []}]}, _options) do
     ""
@@ -166,7 +171,7 @@ defmodule XMLRPC.Decoder do
 
   # An empty string that drops the type specifier will parse as :undefined instead of an empty binary.
   defp parse_value( {:ValueType, [], :undefined                                   }, _options) do
-    ""  
+    ""
   end
 
   # Parse a 'nil' atom
