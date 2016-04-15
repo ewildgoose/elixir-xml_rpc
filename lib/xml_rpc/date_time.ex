@@ -41,7 +41,7 @@ defmodule XMLRPC.DateTime do
       nil ->  {:error, "Unable to parse date"}
       date -> [year, mon, day, hour, min, sec] =
                   date
-                  |> Enum.map &to_int/1
+                  |> Enum.map(&to_int/1)
               {:ok, {{year, mon, day}, {hour, min, sec}}}
     end
   end
