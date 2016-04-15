@@ -171,7 +171,7 @@ defimpl XMLRPC.ValueEncoder, for: List do
   def encode(array, options) do
       tag("array",
         tag("data",
-          array |> Enum.map fn v -> XMLRPC.Encoder.encode_value(v, options) end ) )
+          array |> Enum.map(fn v -> XMLRPC.Encoder.encode_value(v, options) end) ) )
   end
 end
 
@@ -182,7 +182,7 @@ defimpl XMLRPC.ValueEncoder, for: Map do
   # Note: This will also match structs, so define those above this definition
   def encode(struct, options) do
       tag("struct",
-        struct |> Enum.map fn m -> encode_member(m, options) end)
+        struct |> Enum.map(fn m -> encode_member(m, options) end))
   end
 
   # Individual items of a struct. Basically key/value pair

@@ -191,11 +191,11 @@ defmodule XMLRPC.Decoder do
   # Note: values can be 'structs'/'arrays' as well as other atom types
   defp parse_struct(doc, options) when is_list(doc) do
     doc
-    |> Enum.reduce  Map.new,
-                    fn(member, acc) ->
-                        parse_member(member, options)
-                        |> Enum.into acc
-                    end
+    |> Enum.reduce(Map.new,
+                        fn(member, acc) ->
+                            parse_member(member, options)
+                            |> Enum.into(acc)
+                        end)
   end
 
   # Parse the 'array'
@@ -203,7 +203,7 @@ defmodule XMLRPC.Decoder do
   # Note: values can be 'structs'/'arrays' as well as other atom types
   defp parse_array(doc, options) when is_list(doc) do
     doc
-    |> Enum.map fn v -> parse_value(v, options) end
+    |> Enum.map(fn v -> parse_value(v, options) end)
   end
 
   # Empty array, ie <array><data/></data>
@@ -214,7 +214,7 @@ defmodule XMLRPC.Decoder do
   # Parse a list of Parameter values (implies a Request)
   defp parse_params(values, options) when is_list(values) do
     values
-    |> Enum.map fn p -> parse_param(p, options) end
+    |> Enum.map(fn p -> parse_param(p, options) end)
   end
 
   # Parse a single Parameter

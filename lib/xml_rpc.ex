@@ -20,13 +20,13 @@ defmodule XMLRPC do
 
   ## Example
 
-        iex> request_body = %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode!
+        iex> _request_body = %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode!
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"
 
         # Now use HTTPoison to call your RPC
         response = HTTPoison.post!("http://www.advogato.org/XMLRPC", request_body).body
 
-        iex> response = "<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>" |> XMLRPC.decode
+        iex> _response = "<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>" |> XMLRPC.decode
         {:ok, %XMLRPC.MethodResponse{param: [5, 6]}}
 
 
