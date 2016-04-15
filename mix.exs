@@ -3,7 +3,7 @@ defmodule XmlRpc.Mixfile do
 
   def project do
     [app: :xmlrpc,
-     version: "0.9.1",
+     version: "1.0.0",
      elixir: "~> 1.0",
      name: "XMLRPC",
      description: "XML-RPC encoder/decder for Elixir. Supports all valid datatypes. Input (ie untrusted) is parsed with erlsom against an xml-schema for security.",
@@ -39,7 +39,7 @@ defmodule XmlRpc.Mixfile do
 
   defp package do
     [files: ~w(lib mix.exs README.md LICENSE),
-     contributors: ["Ed Wildgoose"],
+     maintainers: ["Ed Wildgoose"],
      licenses: ["Apache 2.0"],
      links: %{"GitHub" => "https://github.com/ewildgoose/elixir-xml_rpc"}]
   end
