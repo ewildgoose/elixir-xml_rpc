@@ -48,6 +48,29 @@ defmodule XMLRPC.DecoderTest do
   @rpc_simple_response_1_elixir %XMLRPC.MethodResponse{param: 30}
 
 
+  # 2^50 = 1125899906842624 (more than 32 bit)
+  @rpc_bitsize_integer_response_1 """
+<?xml version="1.0" encoding="UTF-8"?>
+<methodResponse>
+   <params>
+      <param>
+        <value>
+          <array>
+            <data>
+              <value><i4>17</i4></value>
+              <value><i8>1125899906842624</i8></value>
+            </data>
+           </array>
+         </value>
+      </param>
+   </params>
+</methodResponse>
+"""
+
+  @rpc_bitsize_integer_response_1_elixir %XMLRPC.MethodResponse{param: [17, 1125899906842624]}
+
+
+
   @rpc_fault_1 """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
@@ -262,6 +285,11 @@ defmodule XMLRPC.DecoderTest do
   test "decode rpc_simple_response_1" do
     decode = XMLRPC.decode!(@rpc_simple_response_1)
     assert decode == @rpc_simple_response_1_elixir
+  end
+
+  test "decode rpc_bitsize_integer_response_1" do
+    decode = XMLRPC.decode!(@rpc_bitsize_integer_response_1)
+    assert decode == @rpc_bitsize_integer_response_1_elixir
   end
 
   test "decode rpc_fault_1" do
