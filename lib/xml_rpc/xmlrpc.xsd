@@ -82,7 +82,7 @@
   <xsd:complexType name="StructType">
     <xsd:sequence>
       <xsd:element name="member" type="MemberType"
-                   maxOccurs="unbounded" />
+                   minOccurs="0" maxOccurs="unbounded" />
     </xsd:sequence>
   </xsd:complexType>
 
