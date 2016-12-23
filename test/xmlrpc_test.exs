@@ -332,6 +332,22 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
 
   @rpc_response_invalid_3_elixir %XMLRPC.MethodResponse{param: HashSet.new}
 
+  @rpc_response_empty_struct """
+<?xml version="1.0" encoding="UTF-8"?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <struct>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodResponse>
+"""
+
+  @rpc_response_empty_struct_elixir %XMLRPC.MethodResponse{param: %{}}
+
 
   # ##########################################################################
 
@@ -416,6 +432,11 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
     assert decode == {:error, "Malformed: Tags don\'t match"}
   end
 
+  test "decode rpc_response_empty_struct" do
+    decode = XMLRPC.decode(@rpc_response_empty_struct)
+    assert decode == {:ok, @rpc_response_empty_struct_elixir}
+  end
+
   # ##########################################################################
 
 
@@ -477,6 +498,13 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
     assert_raise XMLRPC.EncodeError, fn ->
       XMLRPC.encode!(@rpc_response_invalid_3_elixir)
     end
+  end
+
+  test "encode rpc_response_empty_struct" do
+	encode = XMLRPC.encode!(@rpc_response_empty_struct_elixir)
+			 |> IO.iodata_to_binary
+
+	assert encode == strip_space(@rpc_response_empty_struct)
   end
 
   # ##########################################################################
