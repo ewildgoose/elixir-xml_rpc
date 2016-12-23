@@ -109,6 +109,10 @@ defmodule XMLRPC.Decoder do
     parse_struct(struct, options)
   end
 
+  defp parse_value( {:ValueType, [], [{:StructType, [], _struct}]}, _options) do
+    %{}
+  end
+
   # Parse an 'integer' atom
   defp parse_value( {:ValueType, [], [{:"ValueType-int", [],              int}]}, _options)
       when is_integer(int)
