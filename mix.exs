@@ -10,8 +10,8 @@ defmodule XmlRpc.Mixfile do
      source_url: "https://github.com/ewildgoose/elixir-xml_rpc",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps,
-     package: package]
+     deps: deps(),
+     package: package()]
   end
 
   # Configuration for the OTP application
