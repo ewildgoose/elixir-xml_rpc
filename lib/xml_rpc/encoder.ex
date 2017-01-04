@@ -142,7 +142,7 @@ defimpl XMLRPC.ValueEncoder, for: Float do
   def encode(double, _options) do
     # Something of a format hack in the absence of a proper pretty printer
     # On average will round trip a float back to the original simple string
-    tag("double", Float.to_string(double, [decimals: 14, compact: true]))
+    tag("double", :erlang.float_to_binary(double, [{:decimals, 14}, :compact]))
   end
 end
 

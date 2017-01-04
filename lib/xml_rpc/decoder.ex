@@ -81,8 +81,8 @@ defmodule XMLRPC.Decoder do
       when is_list(fault_struct)
   do
     fault = parse_struct(fault_struct, options)
-    fault_code = Dict.get(fault, "faultCode")
-    fault_string = Dict.get(fault, "faultString")
+    fault_code = get_in(fault, ["faultCode"])
+    fault_string = get_in(fault, ["faultString"])
     %Fault{ fault_code: fault_code, fault_string: fault_string }
   end
 
