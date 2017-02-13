@@ -304,6 +304,7 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
   @rpc_base64_call_1_elixir_to_encode %XMLRPC.MethodCall{method_name: "sample.fun1", params: [true,
                                                                                               XMLRPC.Base64.new(@rpc_base64_value)]}
 
+  # Various malformed tags
   @rpc_response_invalid_1 """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
@@ -319,6 +320,7 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
 </methodResponse>
 """
 
+  # Various malformed tags
   @rpc_response_invalid_2 """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodResponse>
@@ -330,7 +332,8 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
 </methodResponse>
 """
 
-  @rpc_response_invalid_3_elixir %XMLRPC.MethodResponse{param: HashSet.new}
+  # Raise an error when trying to encode unsupported param type (function in this case)
+  @rpc_response_invalid_3_elixir %XMLRPC.MethodResponse{param: &Kernel.exit/1}
 
   @rpc_response_empty_struct """
 <?xml version="1.0" encoding="UTF-8"?>
