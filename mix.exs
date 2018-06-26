@@ -4,7 +4,7 @@ defmodule XmlRpc.Mixfile do
   def project do
     [app: :xmlrpc,
      version: "1.1.0",
-     elixir: "~> 1.0",
+     elixir: "~> 1.4",
      name: "XMLRPC",
      description: "XML-RPC encoder/decder for Elixir. Supports all valid datatypes. Input (ie untrusted) is parsed with erlsom against an xml-schema for security.",
      source_url: "https://github.com/ewildgoose/elixir-xml_rpc",
@@ -18,7 +18,7 @@ defmodule XmlRpc.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger]]
+    [extra_applications: []]
   end
 
   # Dependencies can be Hex packages:
