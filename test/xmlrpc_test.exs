@@ -517,7 +517,7 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
   #
   defp strip_space(string) do
     Regex.replace(~r/>\s+</, string, "><")
-    |> String.strip
+    |> String.trim
   end
 
 
