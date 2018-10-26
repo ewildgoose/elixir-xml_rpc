@@ -22,16 +22,25 @@ defmodule XMLRPC.DecoderTest do
 
   @rpc_simple_call_1_elixir %XMLRPC.MethodCall{method_name: "sample.sum", params: [17, 13]}
 
-	@rpc_simple_call_2 """
+
+  # It seems to be valid to either have an empty <params> section or no section at all
+	@rpc_no_params_1 """
 <?xml version="1.0" encoding="UTF-8"?>
 <methodCall>
-   <methodName>sample.sum</methodName>
+   <methodName>GetAlive</methodName>
    <params>
    </params>
 </methodCall>
 """
 
-  @rpc_simple_call_2_elixir %XMLRPC.MethodCall{method_name: "sample.sum", params: []}
+	@rpc_no_params_2 """
+<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+   <methodName>GetAlive</methodName>
+</methodCall>
+"""
+
+  @rpc_no_params_elixir %XMLRPC.MethodCall{method_name: "GetAlive", params: []}
 
 
   @rpc_simple_response_1 """
@@ -360,9 +369,14 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
     assert decode == {:ok, @rpc_simple_call_1_elixir}
   end
 
-  test "decode rpc_simple_call_2" do
-    decode = XMLRPC.decode(@rpc_simple_call_2)
-    assert decode == {:ok, @rpc_simple_call_2_elixir}
+  test "decode rpc_no_params_1" do
+    decode = XMLRPC.decode(@rpc_no_params_1)
+    assert decode == {:ok, @rpc_no_params_elixir}
+  end
+
+  test "decode rpc_no_params_2" do
+    decode = XMLRPC.decode(@rpc_no_params_2)
+    assert decode == {:ok, @rpc_no_params_elixir}
   end
 
   test "decode rpc_simple_response_1" do
