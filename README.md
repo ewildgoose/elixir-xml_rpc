@@ -36,7 +36,7 @@ XML-RPC only allows limited parameter types. We map these to Elixir as follows:
 | `<string>`           | Bitstring, eg "string"    |
 | `<int>` (`<i4>`)     | Integer, eg 17            |
 | `<double>`           | Float, eg -12.3           |
-| `<double>`           | %XMLRPC.FormattedFloat, eg {"~.2f", 1.23}            |
+| `<double>`           | %XMLRPC.FormattedFloat, eg {1.23, "~.2f"}            |
 | `<array>`            | List, eg [1, 2, 3]        |
 | `<struct>`           | Map, eg %{key: "value"}   |
 | `<dateTime.iso8601>` | %XMLRPC.DateTime          |
