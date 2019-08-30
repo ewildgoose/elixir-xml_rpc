@@ -327,8 +327,6 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
   </methodCall>
   """
 
-  @rpc_formatted_float_value -13.53
-
   @rpc_formatted_float_to_encode %XMLRPC.MethodCall{
     method_name: "sample.fun1",
     params: [%XMLRPC.FormattedFloat{raw: {-13.53456, "~.2f"}}]
