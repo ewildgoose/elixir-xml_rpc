@@ -55,9 +55,9 @@ defmodule XMLRPC.Encoder do
 
   def encode!(%XMLRPC.MethodResponse{ param: param }, options) do
     ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>"] ++
-    tag("methodResponse",
-      tag("params",
-        encode_param(param, options)))
+      tag("methodResponse",
+        tag("params",
+          encode_param(param, options)))
   end
 
   def encode!(%XMLRPC.Fault{ fault_code: fault_code, fault_string: fault_string }, options) do
@@ -88,7 +88,7 @@ defmodule XMLRPC.Encoder do
 end
 
 
-# ##########################################################################
+  # ##########################################################################
 
 defprotocol XMLRPC.ValueEncoder do
   @fallback_to_any true
@@ -113,9 +113,9 @@ defimpl XMLRPC.ValueEncoder, for: Atom do
   def encode(false, _options), do: tag("boolean", "0")
 
   def encode(atom, _options), do: tag("string",
-    atom
-    |> Atom.to_string
-    |> escape_attr )
+                                      atom
+                                      |> Atom.to_string
+                                      |> escape_attr )
 end
 
 
@@ -124,7 +124,7 @@ defimpl XMLRPC.ValueEncoder, for: BitString do
 
   def encode(string, _options) do
     tag("string",
-      escape_attr(string))
+        escape_attr(string))
   end
 end
 
@@ -164,7 +164,7 @@ defimpl XMLRPC.ValueEncoder, for: XMLRPC.Base64 do
   import XMLRPC.Encode, only: [tag: 2]
 
   def encode(%XMLRPC.Base64{raw: base64}, _options) do
-    tag("base64", base64)
+      tag("base64", base64)
   end
 end
 
@@ -173,9 +173,9 @@ defimpl XMLRPC.ValueEncoder, for: List do
   import XMLRPC.Encode, only: [tag: 2]
 
   def encode(array, options) do
-    tag("array",
-      tag("data",
-        array |> Enum.map(fn v -> XMLRPC.Encoder.encode_value(v, options) end) ) )
+      tag("array",
+        tag("data",
+          array |> Enum.map(fn v -> XMLRPC.Encoder.encode_value(v, options) end) ) )
   end
 end
 
@@ -185,8 +185,8 @@ defimpl XMLRPC.ValueEncoder, for: Map do
   # Parse a general map structure.
   # Note: This will also match structs, so define those above this definition
   def encode(struct, options) do
-    tag("struct",
-      struct |> Enum.map(fn m -> encode_member(m, options) end))
+      tag("struct",
+        struct |> Enum.map(fn m -> encode_member(m, options) end))
   end
 
   # Individual items of a struct. Basically key/value pair
@@ -213,6 +213,6 @@ defimpl XMLRPC.ValueEncoder, for: Any do
   end
 end
 
-# defp encode_value(_) do
-#   throw({:error, "Unknown value type"})
-# end
+  # defp encode_value(_) do
+  #   throw({:error, "Unknown value type"})
+  # end
