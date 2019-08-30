@@ -3,6 +3,7 @@ defmodule XMLRPC.DecoderTest do
   doctest XMLRPC
   doctest XMLRPC.DateTime
   doctest XMLRPC.Base64
+  doctest XMLRPC.FormattedFloat
 
   @rpc_simple_call_1 """
 <?xml version="1.0" encoding="UTF-8"?>
@@ -312,6 +313,26 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
 
   @rpc_base64_call_1_elixir_to_encode %XMLRPC.MethodCall{method_name: "sample.fun1", params: [true,
                                                                                               XMLRPC.Base64.new(@rpc_base64_value)]}
+  @rpc_formatted_float_call """
+  <?xml version="1.0" encoding="UTF-8"?>
+  <methodCall>
+    <methodName>sample.fun1</methodName>
+    <params>
+      <param>
+        <value>
+          <double>-13.53</double>
+        </value>
+      </param>
+    </params>
+  </methodCall>
+  """
+
+  @rpc_formatted_float_value -13.53
+
+  @rpc_formatted_float_to_encode %XMLRPC.MethodCall{
+    method_name: "sample.fun1",
+    params: [%XMLRPC.FormattedFloat{raw: {-13.53456, "~.2f"}}]
+  }
 
   # Various malformed tags
   @rpc_response_invalid_1 """
@@ -509,6 +530,13 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
                  |> IO.iodata_to_binary
 
     assert encode == strip_space(@rpc_base64_call_1)
+  end
+
+  test "encode formated float data" do
+    encode = XMLRPC.encode!(@rpc_formatted_float_to_encode)
+             |> IO.iodata_to_binary
+
+    assert encode == strip_space(@rpc_formatted_float_call)
   end
 
   test "encode rpc_response_invalid_3" do

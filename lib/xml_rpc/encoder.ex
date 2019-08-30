@@ -164,6 +164,13 @@ defimpl XMLRPC.ValueEncoder, for: XMLRPC.Base64 do
   end
 end
 
+defimpl XMLRPC.ValueEncoder, for: XMLRPC.FormattedFloat do
+  import XMLRPC.Encode, only: [tag: 2]
+
+  def encode(%XMLRPC.FormattedFloat{raw: _} = formatted_float, _options) do
+    tag("double", XMLRPC.FormattedFloat.to_binary(formatted_float))
+  end
+end
 
 defimpl XMLRPC.ValueEncoder, for: List do
   import XMLRPC.Encode, only: [tag: 2]
