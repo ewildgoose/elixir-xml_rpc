@@ -9,7 +9,7 @@ defmodule XMLRPC.FormattedFloat do
   @doc """
   Create a new FormattedFloat struct
   """
-  def new({float, pattern}) do
+  def new({float, pattern}) when is_float(float) and is_binary(pattern) do
     %__MODULE__{raw: {float, pattern}}
   end
 
