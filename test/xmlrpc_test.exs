@@ -525,13 +525,13 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
   end
 
   test "floating point doesn't round arbitrarily" do
-    assert "127.39" == 127.39 |> XMLRPC.to_binary()
-    assert "128.39" == 128.39 |> XMLRPC.to_binary()
+    assert "<double>127.39</double>" == 127.39 |> XMLRPC.ValueEncoder.encode(nil) |> IO.iodata_to_binary
+    assert "<double>128.39</double>" == 128.39 |> XMLRPC.ValueEncoder.encode(nil) |> IO.iodata_to_binary
   end
 
   test "Decimal type outputs with expected precision" do
-    assert "127.39" == Decimal.new("127.3900" |> XMLRPC.to_binary()
-    assert "128.39" == Decimal.new("128.3900") |> XMLRPC.to_binary()
+    assert "<double>127.39</double>" == Decimal.new("127.3900") |> XMLRPC.ValueEncoder.encode(nil) |> IO.iodata_to_binary
+    assert "<double>128.39</double>" == Decimal.new("128.3900") |> XMLRPC.ValueEncoder.encode(nil) |> IO.iodata_to_binary
   end
 
   # ##########################################################################
