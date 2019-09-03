@@ -524,6 +524,16 @@ MjIzMzQ0NTU2Njc3ODg5OQ==
 	assert encode == strip_space(@rpc_response_empty_struct)
   end
 
+  test "floating point doesn't round arbitrarily" do
+    assert "127.39" == 127.39 |> XMLRPC.to_binary()
+    assert "128.39" == 128.39 |> XMLRPC.to_binary()
+  end
+
+  test "Decimal type outputs with expected precision" do
+    assert "127.39" == Decimal.new("127.3900" |> XMLRPC.to_binary()
+    assert "128.39" == Decimal.new("128.3900") |> XMLRPC.to_binary()
+  end
+
   # ##########################################################################
 
 
