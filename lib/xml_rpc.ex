@@ -4,7 +4,6 @@ defmodule XMLRPC do
   alias XMLRPC.Decoder
   alias XMLRPC.Encoder
 
-
   @moduledoc ~S"""
   Encode and decode elixir terms to [XML-RPC](http://wikipedia.org/wiki/XML-RPC) parameters.
   All XML-RPC parameter types are supported, including arrays, structs and Nil (optional).
@@ -90,7 +89,7 @@ defmodule XMLRPC do
     @moduledoc """
     struct defining an xml-rpc 'fault' response
     """
-    @type t :: %__MODULE__{fault_code: Integer, fault_string: String.t}
+    @type t :: %__MODULE__{fault_code: Integer, fault_string: String.t()}
 
     defstruct fault_code: 0, fault_string: ""
   end
@@ -99,7 +98,7 @@ defmodule XMLRPC do
     @moduledoc """
     struct defining an xml-rpc call (note array of params)
     """
-    @type t :: %__MODULE__{method_name: String.t, params: [ XMLRPC.t ]}
+    @type t :: %__MODULE__{method_name: String.t(), params: [XMLRPC.t()]}
 
     defstruct method_name: "", params: nil
   end
@@ -108,21 +107,19 @@ defmodule XMLRPC do
     @moduledoc """
     struct defining an xml-rpc response (note single param)
     """
-    @type t :: %__MODULE__{param: XMLRPC.t}
+    @type t :: %__MODULE__{param: XMLRPC.t()}
 
     defstruct param: nil
   end
 
-
-  @type t :: nil | number | boolean | String.t | map() | [nil | number | boolean | String.t]
-
+  @type t :: nil | number | boolean | String.t() | map() | [nil | number | boolean | String.t()]
 
   @doc """
   Encode an XMLRPC call or response elixir structure into XML as iodata
 
   Raises an exception on error.
   """
-  @spec encode_to_iodata!(XMLRPC.t, Keyword.t) :: {:ok, iodata} | {:error, {any, String.t}}
+  @spec encode_to_iodata!(XMLRPC.t(), Keyword.t()) :: {:ok, iodata} | {:error, {any, String.t()}}
   def encode_to_iodata!(value, options \\ []) do
     encode!(value, [iodata: true] ++ options)
   end
@@ -130,7 +127,7 @@ defmodule XMLRPC do
   @doc """
   Encode an XMLRPC call or response elixir structure into XML as iodata
   """
-  @spec encode_to_iodata(XMLRPC.t, Keyword.t) :: {:ok, iodata} | {:error, {any, String.t}}
+  @spec encode_to_iodata(XMLRPC.t(), Keyword.t()) :: {:ok, iodata} | {:error, {any, String.t()}}
   def encode_to_iodata(value, options \\ []) do
     encode(value, [iodata: true] ++ options)
   end
@@ -143,12 +140,12 @@ defmodule XMLRPC do
       iex> %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode!
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"
   """
-  @spec encode!(XMLRPC.t, Keyword.t) :: iodata | no_return
+  @spec encode!(XMLRPC.t(), Keyword.t()) :: iodata | no_return
   def encode!(value, options \\ []) do
     iodata = Encoder.encode!(value, options)
 
     unless options[:iodata] do
-      iodata |> IO.iodata_to_binary
+      iodata |> IO.iodata_to_binary()
     else
       iodata
     end
@@ -160,15 +157,14 @@ defmodule XMLRPC do
       iex> %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode
       {:ok, "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"}
   """
-  @spec encode(XMLRPC.t, Keyword.t) :: {:ok, iodata} | {:ok, String.t} | {:error, {any, String.t}}
+  @spec encode(XMLRPC.t(), Keyword.t()) ::
+          {:ok, iodata} | {:ok, String.t()} | {:error, {any, String.t()}}
   def encode(value, options \\ []) do
     {:ok, encode!(value, options)}
-
   rescue
     exception in [EncodeError] ->
       {:error, {exception.value, exception.message}}
   end
-
 
   @doc ~S"""
   Decode XMLRPC call or response XML into an Elixir structure
@@ -176,10 +172,13 @@ defmodule XMLRPC do
       iex> XMLRPC.decode("<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>")
       {:ok, %XMLRPC.MethodResponse{param: [5, 6]}}
   """
-  @spec decode(iodata, Keyword.t) :: {:ok, Fault.t} | {:ok, MethodCall.t} | {:ok, MethodResponse.t} | {:error, String.t}
+  @spec decode(iodata, Keyword.t()) ::
+          {:ok, Fault.t()}
+          | {:ok, MethodCall.t()}
+          | {:ok, MethodResponse.t()}
+          | {:error, String.t()}
   def decode(value, options \\ []) do
     {:ok, decode!(value, options)}
-
   rescue
     exception in [DecodeError] ->
       {:error, exception.message}
@@ -193,7 +192,8 @@ defmodule XMLRPC do
       iex> XMLRPC.decode!("<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>")
       %XMLRPC.MethodResponse{param: [5, 6]}
   """
-  @spec decode!(iodata, Keyword.t) :: Fault.t | MethodCall.t | MethodResponse.t | no_return
+  @spec decode!(iodata, Keyword.t()) ::
+          Fault.t() | MethodCall.t() | MethodResponse.t() | no_return
   def decode!(value, options \\ []) do
     Decoder.decode!(value, options)
   end

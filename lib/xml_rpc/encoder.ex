@@ -2,7 +2,6 @@ defmodule XMLRPC.EncodeError do
   defexception value: nil, message: nil
 end
 
-
 defmodule XMLRPC.Encode do
   @moduledoc """
   Utility functions helpful for encoding XML
@@ -36,7 +35,6 @@ defmodule XMLRPC.Encode do
   end
 end
 
-
 defmodule XMLRPC.Encoder do
   @moduledoc """
   This module does the work of encoding an XML-RPC call or response.
@@ -46,37 +44,51 @@ defmodule XMLRPC.Encoder do
 
   def encode!(%XMLRPC.MethodCall{method_name: method_name, params: params}, options) do
     ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>"] ++
-    tag("methodCall",
-      tag("methodName",
-        method_name) ++
-      tag("params",
-        encode_params(params, options)))
+      tag(
+        "methodCall",
+        tag(
+          "methodName",
+          method_name
+        ) ++
+          tag(
+            "params",
+            encode_params(params, options)
+          )
+      )
   end
 
-  def encode!(%XMLRPC.MethodResponse{ param: param }, options) do
+  def encode!(%XMLRPC.MethodResponse{param: param}, options) do
     ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>"] ++
-      tag("methodResponse",
-        tag("params",
-          encode_param(param, options)))
+      tag(
+        "methodResponse",
+        tag(
+          "params",
+          encode_param(param, options)
+        )
+      )
   end
 
-  def encode!(%XMLRPC.Fault{ fault_code: fault_code, fault_string: fault_string }, options) do
+  def encode!(%XMLRPC.Fault{fault_code: fault_code, fault_string: fault_string}, options) do
     fault = %{faultCode: fault_code, faultString: fault_string}
 
     ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>"] ++
-    tag("methodResponse",
-      tag("fault",
-        encode_value(fault, options)))
+      tag(
+        "methodResponse",
+        tag(
+          "fault",
+          encode_value(fault, options)
+        )
+      )
   end
 
   # ##########################################################################
 
   defp encode_params(params, options) do
-    Enum.map params, fn p -> encode_param(p, options) end
+    Enum.map(params, fn p -> encode_param(p, options) end)
   end
 
   defp encode_param(param, options) do
-    tag "param", encode_value(param, options)
+    tag("param", encode_value(param, options))
   end
 
   # ##########################################################################
@@ -84,18 +96,15 @@ defmodule XMLRPC.Encoder do
   def encode_value(value, options) do
     tag("value", XMLRPC.ValueEncoder.encode(value, options))
   end
-
 end
 
-
-  # ##########################################################################
+# ##########################################################################
 
 defprotocol XMLRPC.ValueEncoder do
   @fallback_to_any true
 
   def encode(value, options)
 end
-
 
 defimpl XMLRPC.ValueEncoder, for: Atom do
   import XMLRPC.Encode, only: [tag: 2, escape_attr: 1]
@@ -109,32 +118,35 @@ defimpl XMLRPC.ValueEncoder, for: Atom do
     end
   end
 
-  def encode(true, _options),  do: tag("boolean", "1")
+  def encode(true, _options), do: tag("boolean", "1")
   def encode(false, _options), do: tag("boolean", "0")
 
-  def encode(atom, _options), do: tag("string",
-                                      atom
-                                      |> Atom.to_string
-                                      |> escape_attr )
+  def encode(atom, _options),
+    do:
+      tag(
+        "string",
+        atom
+        |> Atom.to_string()
+        |> escape_attr
+      )
 end
-
 
 defimpl XMLRPC.ValueEncoder, for: BitString do
   import XMLRPC.Encode, only: [tag: 2, escape_attr: 1]
 
   def encode(string, _options) do
-    tag("string",
-        escape_attr(string))
+    tag(
+      "string",
+      escape_attr(string)
+    )
   end
 end
-
 
 defimpl XMLRPC.ValueEncoder, for: Integer do
   import XMLRPC.Encode, only: [tag: 2]
 
   def encode(int, _options), do: tag("int", Integer.to_string(int))
 end
-
 
 defimpl XMLRPC.ValueEncoder, for: Float do
   import XMLRPC.Encode, only: [tag: 2]
@@ -156,7 +168,6 @@ defimpl XMLRPC.ValueEncoder, for: Decimal do
   end
 end
 
-
 defimpl XMLRPC.ValueEncoder, for: XMLRPC.DateTime do
   import XMLRPC.Encode, only: [tag: 2]
 
@@ -165,23 +176,25 @@ defimpl XMLRPC.ValueEncoder, for: XMLRPC.DateTime do
   end
 end
 
-
 defimpl XMLRPC.ValueEncoder, for: XMLRPC.Base64 do
   import XMLRPC.Encode, only: [tag: 2]
 
   def encode(%XMLRPC.Base64{raw: base64}, _options) do
-      tag("base64", base64)
+    tag("base64", base64)
   end
 end
-
 
 defimpl XMLRPC.ValueEncoder, for: List do
   import XMLRPC.Encode, only: [tag: 2]
 
   def encode(array, options) do
-      tag("array",
-        tag("data",
-          array |> Enum.map(fn v -> XMLRPC.Encoder.encode_value(v, options) end) ) )
+    tag(
+      "array",
+      tag(
+        "data",
+        array |> Enum.map(fn v -> XMLRPC.Encoder.encode_value(v, options) end)
+      )
+    )
   end
 end
 
@@ -191,8 +204,10 @@ defimpl XMLRPC.ValueEncoder, for: Map do
   # Parse a general map structure.
   # Note: This will also match structs, so define those above this definition
   def encode(struct, options) do
-      tag("struct",
-        struct |> Enum.map(fn m -> encode_member(m, options) end))
+    tag(
+      "struct",
+      struct |> Enum.map(fn m -> encode_member(m, options) end)
+    )
   end
 
   # Individual items of a struct. Basically key/value pair
@@ -201,9 +216,11 @@ defimpl XMLRPC.ValueEncoder, for: Map do
   end
 
   def encode_member({key, value}, options) when is_bitstring(key) do
-    tag("member",
+    tag(
+      "member",
       tag("name", escape_attr(key)) ++
-      XMLRPC.Encoder.encode_value(value, options) )
+        XMLRPC.Encoder.encode_value(value, options)
+    )
   end
 end
 
@@ -214,11 +231,11 @@ defimpl XMLRPC.ValueEncoder, for: Any do
 
   def encode(value, _options) do
     raise XMLRPC.EncodeError,
-          value: value,
-          message: "unable to encode value: #{inspect value}"
+      value: value,
+      message: "unable to encode value: #{inspect(value)}"
   end
 end
 
-  # defp encode_value(_) do
-  #   throw({:error, "Unknown value type"})
-  # end
+# defp encode_value(_) do
+#   throw({:error, "Unknown value type"})
+# end
