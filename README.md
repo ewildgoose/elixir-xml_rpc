@@ -19,9 +19,11 @@ the risk that a malicious client can exhaust out atom space and crash the vm.
 
 Add XML-RPC to your mix dependencies
 
-    def deps do
-      [{:xmlrpc, "~> 1.0"}]
-    end
+```elixir
+def deps do
+  [{:xmlrpc, "~> 1.0"}]
+end
+```
 
 Then run `mix deps.get` and `mix deps.compile`.
 
@@ -62,48 +64,88 @@ If you want a <nil/> input to be treated as an error then pass
 The XML-RPC api consists of a call to a remote url, passing a "method_name"
 and a number of parameters.
 
-    %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]}
+```elixir
+%XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]}
+```
 
 The response is either "failure" and a `fault_code` and `fault_string`, or a
 response which consists of a single parameter (use a struct/array to pass back
 multiple values)
 
-    %XMLRPC.Fault{fault_code: 4, fault_string: "Too many parameters."}
+```elixir
+%XMLRPC.Fault{fault_code: 4, fault_string: "Too many parameters."}
+```
 
-    %XMLRPC.MethodResponse{param: 30}
+```elixir
+%XMLRPC.MethodResponse{param: 30}
+```
 
 To encode/decode to xml use `XMLRPC.encode/2` or `XMLRPC.decode/2`
 
 ## Examples
+
+### Client using Tesla
+
+[Tesla](https://github.com/teamon/tesla) can be used to talk to the remote API. 
+
+There is dedicated Middleware available [here](lib/xml_rpc/tesla/middleware.ex).
+
+```elixir
+defmodule Client do
+  use Tesla
+
+  plug XMLRPC.Tesla.Middleware
+
+  def sumprod(a, b) do
+    post("http://www.advogato.org/XMLRPC", %XMLRPC.MethodCall(method_name: "test.sumprod", params: [a, b]))
+  end
+end
+```
+
+Your request body will be automatically converted to `%XMLRPC.MethodCall` struct and your response will be
+automatically marshalled to `%XMLRPC.MethodResponse`.
+
+You can use `XMLRPC.Tesla.Middleware.Encode` or `XMLRPC.Tesla.Middleware.Decode` middlewares if you only
+need encode/decode option. By default only 2xx responses are parsed but that is configurable.
+
+```elixir
+plug XMLRPC.Tesla.Middleware, decodable_status: fn status -> status in 200..299
+```
+
+You can see all options available in the moduledoc [here](lib/xml_rpc/tesla/middleware.ex).
 
 ### Client using HTTPoison
 
 [HTTPoison](https://github.com/edgurgel/httpoison) can be used to talk to the remote API.  To encode the body we can
 simply call `XMLRPC.encode/2`, and then decode the response with `XMLRPC.decode/2`
 
-    request_body = %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]}
-                    |> XMLRPC.encode!
-    "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"
+```elixir
+request_body = %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]}
+                |> XMLRPC.encode!
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"
 
-    # Now use HTTPoison to call your RPC
-    response = HTTPoison.post!("http://www.advogato.org/XMLRPC", request_body).body
+# Now use HTTPoison to call your RPC
+response = HTTPoison.post!("http://www.advogato.org/XMLRPC", request_body).body
 
-    # eg
-    response = "<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>"
-                |> XMLRPC.decode
-    {:ok, %XMLRPC.MethodResponse{param: [5, 6]}}
+# eg
+response = "<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>"
+            |> XMLRPC.decode
+{:ok, %XMLRPC.MethodResponse{param: [5, 6]}}
+```
 
 See the [HTTPoison docs](https://github.com/edgurgel/httpoison#wrapping-httpoisonbase)
 for more details, but you can also wrap the base API and have HTTPoison
 automatically do your encoding and decoding.  In this way its very simple to build
 higher level APIs
 
-    defmodule XMLRPC do
-      use HTTPoison.Base
+```elixir
+defmodule XMLRPC do
+  use HTTPoison.Base
 
-      def process_request_body(body), do: XMLRPC.encode(body)
-      def process_response_body(body), do: XMLRPC.decode(body)
-    end
+  def process_request_body(body), do: XMLRPC.encode(body)
+  def process_response_body(body), do: XMLRPC.decode(body)
+end
+```
 
     iex> request = %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]}
     iex> response = HTTPoison.post!("http://www.advogato.org/XMLRPC", request).body
