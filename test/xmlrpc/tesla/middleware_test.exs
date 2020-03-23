@@ -223,7 +223,7 @@ defmodule XMLRPC.Tesla.MiddlewareTest do
       end)
     end
 
-    test "EncodeJson / DecodeJson work without options" do
+    test "Encode / Decode middlewares work without options" do
       assert {:ok, env} =
                EncodeDecodeXMLRPCClient.post("/foo2baz", %XMLRPC.MethodCall{params: ["foo"]})
 
