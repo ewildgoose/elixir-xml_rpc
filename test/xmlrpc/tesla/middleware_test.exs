@@ -25,6 +25,10 @@ defmodule XMLRPC.Tesla.MiddlewareTest do
               {200, [{"content-type", "application/xml"}],
                env.body |> String.replace("foo", "baz")}
 
+            "/encode2" ->
+              {200, [{"content-type", "text/xml"}],
+               env.body |> String.replace("foo", "baz")}
+
             "/empty" ->
               {200, [{"content-type", "application/xml"}], nil}
 
@@ -64,12 +68,12 @@ defmodule XMLRPC.Tesla.MiddlewareTest do
       assert env.body == ""
     end
 
-    test "decode only if Content-Type is application/xml or test/json" do
+    test "decode only if Content-Type is application/xml or text/xml" do
       assert {:ok, env} = Client.get("/invalid-content-type")
       assert env.body == "hello"
     end
 
-    test "encode body as XMLRPC" do
+    test "encode body as XMLRPC when content type is application/xml" do
       sum = ~s(
       <?xml version="1.0" encoding="UTF-8"?>
       <methodCall>
@@ -83,6 +87,23 @@ defmodule XMLRPC.Tesla.MiddlewareTest do
       )
 
       assert {:ok, env} = Client.post("/encode", sum)
+      assert env.body == %XMLRPC.MethodCall{method_name: "sample.sum", params: ["baz"]}
+    end
+
+    test "encode body as XMLRPC when content type is text/xml" do
+      sum = ~s(
+      <?xml version="1.0" encoding="UTF-8"?>
+      <methodCall>
+         <methodName>sample.sum</methodName>
+         <params>
+            <param>
+               <value><string>foo</string></value>
+            </param>
+         </params>
+      </methodCall>
+      )
+
+      assert {:ok, env} = Client.post("/encode2", sum)
       assert env.body == %XMLRPC.MethodCall{method_name: "sample.sum", params: ["baz"]}
     end
 

@@ -24,7 +24,7 @@ if Code.ensure_loaded?(Tesla) do
     @behaviour Tesla.Middleware
 
     @default_encode_content_type "application/xml"
-    @default_content_types ["application/xml"]
+    @default_content_types ["application/xml", "text/xml"]
     def default_decodable_status(status), do: status in 200..299
 
     @impl Tesla.Middleware
