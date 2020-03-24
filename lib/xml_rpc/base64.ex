@@ -4,7 +4,7 @@ defmodule XMLRPC.Base64 do
 
   Note: See the `Base` module for other conversions in Elixir stdlib
   """
-  @type t :: %__MODULE__{raw: String.t}
+  @type t :: %__MODULE__{raw: String.t()}
   defstruct raw: ""
 
   @doc """
@@ -24,12 +24,15 @@ defmodule XMLRPC.Base64 do
     # The <1.2.0 version of elixir won't correctly parse it.
     # We manually remove whitespace on older versions of elixir
     case encoded do
-      [] -> {:ok, encoded}
+      [] ->
+        {:ok, encoded}
+
       _ ->
-        if Version.compare(System.version, "1.2.3") == :lt do
+        if Version.compare(System.version(), "1.2.3") == :lt do
           encoded
-          |> String.replace(~r/\s/, "") # remove any whitespace
-          |> Base.decode64
+          # remove any whitespace
+          |> String.replace(~r/\s/, "")
+          |> Base.decode64()
         else
           Base.decode64(encoded, ignore: :whitespace)
         end

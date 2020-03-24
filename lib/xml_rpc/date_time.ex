@@ -8,7 +8,7 @@ defmodule XMLRPC.DateTime do
   (and perhaps encoder) to speak to non standard end-points...
   """
 
-  @type t :: %__MODULE__{raw: String.t}
+  @type t :: %__MODULE__{raw: String.t()}
   defstruct raw: ""
 
   @doc """
@@ -17,10 +17,14 @@ defmodule XMLRPC.DateTime do
       iex> XMLRPC.DateTime.new({{2015,6,9},{9,7,2}})
       %XMLRPC.DateTime{raw: "20150609T09:07:02"}
   """
-  def new({{year, month, day},{hour, min, sec}}) do
-    date = :io_lib.format("~4.10.0B~2.10.0B~2.10.0BT~2.10.0B:~2.10.0B:~2.10.0B",
-                            [year, month, day, hour, min, sec])
-           |> IO.iodata_to_binary
+  def new({{year, month, day}, {hour, min, sec}}) do
+    date =
+      :io_lib.format(
+        "~4.10.0B~2.10.0B~2.10.0BT~2.10.0B:~2.10.0B:~2.10.0B",
+        [year, month, day, hour, min, sec]
+      )
+      |> IO.iodata_to_binary()
+
     %__MODULE__{raw: date}
   end
 
@@ -37,14 +41,20 @@ defmodule XMLRPC.DateTime do
       {:ok, {{2015, 6, 9}, {9, 7, 2}}}
   """
   def to_erlang_date(%__MODULE__{raw: date}) do
-    case Regex.run(~r/(\d{4})-?(\d{2})-?(\d{2})T(\d{2}):(\d{2}):(\d{2})/, date, capture: :all_but_first) do
-      nil ->  {:error, "Unable to parse date"}
-      date -> [year, mon, day, hour, min, sec] =
-                  date
-                  |> Enum.map(&to_int/1)
-              {:ok, {{year, mon, day}, {hour, min, sec}}}
+    case Regex.run(~r/(\d{4})-?(\d{2})-?(\d{2})T(\d{2}):(\d{2}):(\d{2})/, date,
+           capture: :all_but_first
+         ) do
+      nil ->
+        {:error, "Unable to parse date"}
+
+      date ->
+        [year, mon, day, hour, min, sec] =
+          date
+          |> Enum.map(&to_int/1)
+
+        {:ok, {{year, mon, day}, {hour, min, sec}}}
     end
   end
 
-  defp to_int(str), do: str |> Integer.parse |> elem(0)
+  defp to_int(str), do: str |> Integer.parse() |> elem(0)
 end
