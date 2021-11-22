@@ -20,14 +20,14 @@ defmodule XMLRPC do
 
   ## Example
 
-        iex> _request_body = %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode!
-        "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"
+      iex> _request_body = %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode!
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"
 
-        # Now use HTTPoison to call your RPC
-        response = HTTPoison.post!("http://www.advogato.org/XMLRPC", request_body).body
+      # Now use HTTPoison to call your RPC
+      response = HTTPoison.post!("http://www.advogato.org/XMLRPC", request_body).body
 
-        iex> _response = "<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>" |> XMLRPC.decode
-        {:ok, %XMLRPC.MethodResponse{param: [5, 6]}}
+      iex> _response = "<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>" |> XMLRPC.decode
+      {:ok, %XMLRPC.MethodResponse{param: [5, 6]}}
 
 
   ## Datatypes
@@ -140,8 +140,9 @@ defmodule XMLRPC do
 
   Raises an exception on error.
 
-      iex> %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode!
-      "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"
+    iex> %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode!
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"
+
   """
   @spec encode!(XMLRPC.t, Keyword.t) :: iodata | no_return
   def encode!(value, options \\ []) do
@@ -159,6 +160,7 @@ defmodule XMLRPC do
 
       iex> %XMLRPC.MethodCall{method_name: "test.sumprod", params: [2,3]} |> XMLRPC.encode
       {:ok, "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>test.sumprod</methodName><params><param><value><int>2</int></value></param><param><value><int>3</int></value></param></params></methodCall>"}
+
   """
   @spec encode(XMLRPC.t, Keyword.t) :: {:ok, iodata} | {:ok, String.t} | {:error, {any, String.t}}
   def encode(value, options \\ []) do
@@ -175,6 +177,7 @@ defmodule XMLRPC do
 
       iex> XMLRPC.decode("<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>")
       {:ok, %XMLRPC.MethodResponse{param: [5, 6]}}
+
   """
   @spec decode(iodata, Keyword.t) :: {:ok, Fault.t} | {:ok, MethodCall.t} | {:ok, MethodResponse.t} | {:error, String.t}
   def decode(value, options \\ []) do
@@ -192,6 +195,7 @@ defmodule XMLRPC do
 
       iex> XMLRPC.decode!("<?xml version=\"1.0\"?><methodResponse><params><param><value><array><data><value><int>5</int></value><value><int>6</int></value></data></array></value></param></params></methodResponse>")
       %XMLRPC.MethodResponse{param: [5, 6]}
+
   """
   @spec decode!(iodata, Keyword.t) :: Fault.t | MethodCall.t | MethodResponse.t | no_return
   def decode!(value, options \\ []) do

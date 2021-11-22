@@ -5,7 +5,7 @@ end
 
 defmodule XMLRPC.Encode do
   @moduledoc """
-  Utility functions helpful for encoding XML
+  Utility functions helpful for encoding XML.
   """
 
   @doc """
@@ -18,7 +18,7 @@ defmodule XMLRPC.Encode do
   end
 
   @doc """
-  escape special characters in XML attributes.
+  Escape special characters in XML attributes.
 
   Note: technically you only need to escape "&" and "<" in tags, however,
   its common to also escape ">".  For attributes you must additionally escape
