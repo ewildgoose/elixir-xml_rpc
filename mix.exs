@@ -24,7 +24,7 @@ defmodule XmlRpc.Mixfile do
 
   defp deps do
     [
-      {:ex_doc, ">= 0.0.0", only: :docs},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:erlsom, "~> 1.4"},
       {:decimal, "~> 1.0"}
     ]
