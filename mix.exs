@@ -2,7 +2,7 @@ defmodule XmlRpc.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/ewildgoose/elixir-xml_rpc"
-  @version "1.4.0"
+  @version "1.4.1"
 
   def project do
     [
