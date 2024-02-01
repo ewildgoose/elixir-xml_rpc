@@ -152,7 +152,7 @@ defimpl XMLRPC.ValueEncoder, for: Decimal do
   def encode(double, _options) do
     # Something of a format hack in the absence of a proper pretty printer
     # On average will round trip a float back to the original simple string
-    tag("double", double |> Decimal.reduce() |> Decimal.to_string())
+    tag("double", double |> Decimal.normalize() |> Decimal.to_string())
   end
 end
 
