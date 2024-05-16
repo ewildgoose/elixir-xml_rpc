@@ -90,7 +90,7 @@ defmodule XMLRPC do
     @moduledoc """
     struct defining an xml-rpc 'fault' response
     """
-    @type t :: %__MODULE__{fault_code: Integer, fault_string: String.t}
+    @type t :: %__MODULE__{fault_code: integer, fault_string: String.t}
 
     defstruct fault_code: 0, fault_string: ""
   end

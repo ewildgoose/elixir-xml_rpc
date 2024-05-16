@@ -28,7 +28,7 @@ Add XML-RPC to your mix dependencies:
 ```elixir
 def deps do
   [
-    {:xmlrpc, "~> 1.3"}
+    {:xmlrpc, "~> 1.4"}
   ]
 end
 ```
